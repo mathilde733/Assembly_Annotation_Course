@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=16G
+#SBATCH --cpus-per-task=4
+#SBATCH --job-name=fastqc
+#SBATCH --partition=pibu_el8
+
+module load FastQC/0.11.9-Java-11
+#fastqc ./Had-6b/ERR11437317.fastq.gz -o ./fastQC_results
+fastqc ./RNAseq_Sha/ERR754081_1.fastq.gz -o ./fastQC_results
+fastqc ./RNAseq_Sha/ERR754081_2.fastq.gz -o ./fastQC_results
