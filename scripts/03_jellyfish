@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=40G
+#SBATCH --cpus-per-task=4
+#SBATCH --job-name=jellyfish
+#SBATCH --partition=pibu_el8
+
+#wget https://github.com/gmarcais/Jellyfish/releases/download/v2.3.0/jellyfish-2.3.0.tar.gz
+
+jellyfish count -C -m 21 -s 5000000000 -t 4 \
+    <(zcat ./QC/fastp_result/ERR11437317.clean.fastq.gz) \
+    -o reads.jf
+jellyfish histo -t 4 reads.jf > reads.histo
+
+

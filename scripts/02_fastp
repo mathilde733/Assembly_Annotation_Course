@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=16G
+#SBATCH --cpus-per-task=4
+#SBATCH --job-name=fastp
+#SBATCH --partition=pibu_el8
+
+module load fastp/0.23.4-GCC-10.3.0
+
+fastp -i ./reads/RNAseq_Sha/ERR754081_1.fastq.gz -I ./reads/RNAseq_Sha/ERR754081_2.fastq.gz \
+    -o ./QC/fastp_result/ERR754081_1.clean.fastq.gz -O ./QC/fastp_result/ERR754081_2.clean.fastq.gz \
+    --thread 4 --cut_front --cut_tail --cut_window_size 4 -M 20 --length_required 30 --detect_adapter_for_pe
+fastp -i ./reads/Had-6b/ERR11437317.fastq.gz -o ./QC/fastp_result/ERR11437317.clean.fastq.gz
