@@ -7,9 +7,11 @@ Datasets used: PacBio HiFi reads (WGS) and Illumina reads (RNA-seq).
 
 ### __1st step:__ pre-assembly quality control 
 - Raw reads quality check 
-- Kmer counting for genome size estimation
+- Kmer counting for genome size estimation using Jellyfish tool
 
 ### __2nd step:__ assembly
+- Whole genome assemblies using Flye, HifiASM, LJA
+- Whole transcriptome assembly using Trinity
 
 ### __3rd step:__ evaluation
 
@@ -19,6 +21,10 @@ Datasets used: PacBio HiFi reads (WGS) and Illumina reads (RNA-seq).
 - FastQC v.0.11.9
 - Fastp v.0.23.4
 - Jellyfish v.2.3.0
+- Flye v.2.9
+- HifiASM v.0.16.1
+- LJA v.0.2
+- Trinity v.2.15.1
 
 
 
