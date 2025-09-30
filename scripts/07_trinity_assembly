@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="trinity_assembly"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+module load Trinity/2.15.1-foss-2021a
+
+Trinity --seqType fq \
+    --left reads/RNAseq_Sha/ERR754081_1.fastq.gz \
+    --right reads/RNAseq_Sha/ERR754081_2.fastq.gz \
+    --max_memory 64G \
+    --CPU 16 \
+    --output trinity_output

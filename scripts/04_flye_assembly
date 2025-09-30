@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="flye_Assembly"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+#load the module
+module load Flye/2.9-GCC-10.3.0
+
+flye --pacbio-hifi reads/Had-6b/ERR11437317.fastq.gz --out-dir flye_output 
+
+
+

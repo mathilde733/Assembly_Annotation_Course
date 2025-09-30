@@ -8,6 +8,8 @@
 
 #wget https://github.com/gmarcais/Jellyfish/releases/download/v2.3.0/jellyfish-2.3.0.tar.gz
 
+module load Jellyfish/2.3.0-GCC-10.3.0
+
 jellyfish count -C -m 21 -s 5000000000 -t 4 \
     <(zcat ./QC/fastp_result/ERR11437317.clean.fastq.gz) \
     -o reads.jf
