@@ -7,31 +7,42 @@ Raw data are from: [Qichao Lian et al. A pan-genome of 69 Arabidopsis thaliana a
 ## Project workflow:
 
 ### __1st step:__ pre-assembly quality control 
-- Raw reads quality check 
+- Raw reads quality check (fastQC and fastp, but trimmomatic could also be an option)
 - Kmer counting for genome size estimation using Jellyfish tool
+- Visualization of the histo file (output of Jellyfish) to determine the coverage
 
 ### __2nd step:__ assembly
-- Whole genome assemblies using Flye, HifiASM, LJA
-- Whole transcriptome assembly using Trinity
+- Whole genome assemblies using Flye, HifiASM, LJA. 
+- Whole transcriptome assembly using Trinity (applied on Illumina data).
+Note: LJA assembler was run within Apptainer container
+Note: assemblies could take a few hours to complete and require quite some memory
 
 ### __3rd step:__ evaluation
-- Assessing the quality of genome using BUSCO, QUAST and merqury
+- Assessing the quality of genomes using BUSCO, QUAST and merqury
+- Comparison between assemblies based on the outputs of BUSCO and QUAST
+- Visualization of copy-number spectra (output of merqury)
+Note: BUSCO was applied to all the genome and transcriptome assemblies; QUAST and merqury were applied only to genome assemblies
+Note: QUAST and merqury were run within Apptainer containers
+Note: the Flye genome assembly evalutation has its own script called 12_flye_assembly_evaluation
 
 ### __4th step:__ comparing genomes
-- Comparison of genome using nucmer and mummer
+- Comparison of genome assemblies using nucmer and MUMmer (reference genome is provided; see script 11_comparing_genomes)
+- Visualization of dotplots to compare assemblies or to compare assembly with the reference genome
 
 ## ⚙️ Requirements:
 - FastQC v.0.11.9 
-- Fastp v.0.23.4
+- [Fastp v.0.23.4](https://github.com/OpenGene/fastp)
 - [Jellyfish v.2.3.0](http://genomescope.org/genomescope2.0/)
 - [Flye v.2.9](https://github.com/mikolmogorov/Flye/blob/flye/docs/USAGE.md) 
 - [HifiASM v.0.16.1](https://github.com/chhylp123/hifiasm)
 - [LJA v.0.2](https://github.com/AntonBankevich/LJA/blob/main/docs/lja_manual.md)
 - [Trinity v.2.15.1](https://github.com/trinityrnaseq/trinityrnaseq/wiki)
-- [BUSCO v.](https://busco.ezlab.org)
-- [QUAST v.](https://quast.sourceforge.net/)
-- [merqury v.](https://github.com/marbl/merqury)
-- nucmer and mummer
+- [BUSCO v.5.4.2](https://busco.ezlab.org)
+- [QUAST v.5.2](https://quast.sourceforge.net/)
+- [merqury v.1.3](https://github.com/marbl/merqury)
+- [nucmer and mummer v.4](https://mummer4.github.io/manual/manual.html)
+  
+Some of the tools used in this workflow were run within Apptainer containers to ensure reproducibility and consistent environments. The other softwares were installed via modules. 
 
 
 
