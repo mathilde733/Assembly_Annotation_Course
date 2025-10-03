@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="comparing_genomes"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=2-00:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+# Variables
+REF=/data/courses/assembly-annotation-course/references/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa
+
+# HiFiASM vs Référence
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    nucmer --prefix=hifi_vs_ref $REF hifiASM_output/ERR11437317.asm.bp.p_ctg.fa --breaklen 1000 --mincluster 1000
+
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    mummerplot --png --large -p hifi_vs_ref hifi_vs_ref.delta --large --layout --fat
+
+# LJA vs Référence
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    nucmer --prefix=lja_vs_ref $REF LJA_output/assembly.fasta --breaklen 1000 --mincluster 1000
+
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    mummerplot --png --large -p lja_vs_ref lja_vs_ref.delta --large --layout --fat

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="BUSCO"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+module load BUSCO/5.4.2-foss-2021a
+
+busco -i hifiASM_output/ERR11437317.asm.bp.p_ctg.fa -o BUSCO_output_hifi --mode geno --lineage_dataset brassicales_odb10 --cpu 16
+busco -i LJA_output/assembly.fasta -o BUSCO_output_LJA --mode geno --lineage_dataset brassicales_odb10 --cpu 16
+busco -i trinity_output.Trinity.fasta -o BUSCO_output_trinity --mode trans --lineage_dataset brassicales_odb10 --cpu 16

@@ -1,0 +1,56 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="flye_evaluation"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+#BUSCO step
+module load BUSCO/5.4.2-foss-2021a
+busco -i flye_output/assembly.fasta -o BUSCO_output_flye --mode geno --lineage_dataset brassicales_odb10 --cpu 16
+echo "[BUSCO] Terminé : $(date)"
+
+#merqury step
+export MERQURY="/usr/local/share/merqury"
+APPTAINER=/containers/apptainer/merqury_1.3.sif
+#merqury assembly
+apptainer exec ${APPTAINER} \
+    merqury.sh reads.meryl flye_output/assembly.fasta merqury_Flye
+echo "[Merqury] Terminé : $(date)"
+
+#QUAST with reference 
+apptainer exec --bind /data:/data /containers/apptainer/quast_5.2.0.sif \
+    quast flye_output/assembly.fasta \
+    -o flye_reference_output \
+    -r /data/courses/assembly-annotation-course/references/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa \
+    -g /data/courses/assembly-annotation-course/references/TAIR10_GFF3_genes.gff \
+    --threads 16 \
+    --pacbio /data/users/mjacquey/assembly_annotation_course/reads/Had-6b/ERR11437317.fastq.gz \
+    --eukaryote \
+    --est-ref-size 135000000
+echo "[QUAST avec référence] Terminé : $(date)"
+
+#QUAST without reference
+apptainer exec --bind /data:/data /containers/apptainer/quast_5.2.0.sif \
+    quast flye_output/assembly.fasta \
+    --threads 16 \
+    -o flye_no_reference_output \
+    --pacbio ./reads/Had-6b/ERR11437317.fastq.gz \
+    --eukaryote    \
+    --est-ref-size 135000000
+echo "[QUAST sans référence] Terminé : $(date)"
+
+# Variables
+REF=/data/courses/assembly-annotation-course/references/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa
+
+#flye vs reference
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    nucmer --prefix=flye_vs_ref $REF flye_output/assembly.fasta --breaklen 1000 --mincluster 1000
+
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    mummerplot --png --large -p flye_vs_ref flye_vs_ref.delta --large --layout --fat
+
+echo "=== Fin du pipeline Flye Evaluation : $(date) ==="

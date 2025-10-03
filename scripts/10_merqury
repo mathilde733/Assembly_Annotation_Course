@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="merqury"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+export MERQURY="/usr/local/share/merqury"
+APPTAINER=/containers/apptainer/merqury_1.3.sif
+
+#merqury assembly
+apptainer exec ${APPTAINER} \ 
+    merqury.sh reads.meryl flye_output/assembly.fasta merqury_Flye
+
+apptainer exec ${APPTAINER} \
+    merqury.sh reads.meryl hifiASM_output/ERR11437317.asm.bp.p_ctg.fa merqury_HiFiASM
+
+apptainer exec ${APPTAINER} \
+    merqury.sh reads.meryl LJA_output/assembly.fasta merqury_LJA

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="QUAST"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+#QUAST of HifiASM assembly with reference
+apptainer exec --bind /data:/data /containers/apptainer/quast_5.2.0.sif \
+    quast hifiASM_output/ERR11437317.asm.bp.p_ctg.fa \
+    -o hifi_reference_output \
+    -r /data/courses/assembly-annotation-course/references/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa \
+    -g /data/courses/assembly-annotation-course/references/TAIR10_GFF3_genes.gff \
+    --threads 4 \
+    --pacbio /data/users/mjacquey/assembly_annotation_course/reads/Had-6b/ERR11437317.fastq.gz \
+    --eukaryote \
+    --est-ref-size 135000000
+
+
+

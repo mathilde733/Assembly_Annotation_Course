@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="merqury"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+# Définir le chemin Merqury dans le script
+export MERQURY="/usr/local/share/merqury"
+
+READS_DIR=/data/users/mjacquey/assembly_annotation_course/reads/Had-6b
+READS=/reads/ERR11437317.fastq.gz
+
+APPTAINER=/containers/apptainer/merqury_1.3.sif
+# Créer la base k-mer des reads HiFi
+apptainer exec \
+    --bind ${READS_DIR}:/reads:ro \
+    ${APPTAINER} \
+    meryl count k=21 output reads.meryl ${READS}

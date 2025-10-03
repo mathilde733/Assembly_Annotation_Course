@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="comparison"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=04:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+#HifiASM vs LJA
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    nucmer --prefix=hifi_vs_lja LJA_output/assembly.fasta hifiASM_output/ERR11437317.asm.bp.p_ctg.fa \
+    --breaklen 1000 --mincluster 1000 
+ #LJA = X-axis; HifiASM = Y-axis 
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    mummerplot --png --large -p hifi_vs_lja hifi_vs_lja.delta --large --layout --fat
+
+#HifiASM vs Flye
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    nucmer --prefix=hifi_vs_flye flye_output/assembly.fasta hifiASM_output/ERR11437317.asm.bp.p_ctg.fa --breaklen 1000 --mincluster 1000
+
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    mummerplot --png --large -p hifi_vs_flye hifi_vs_flye.delta --large --layout --fat
+
+#lja vs Flye
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    nucmer --prefix=lja_vs_flye flye_output/assembly.fasta LJA_output/assembly.fasta \
+    --breaklen 1000 --mincluster 1000
+
+apptainer exec --bind /data:/data /containers/apptainer/mummer4_gnuplot.sif \
+    mummerplot --png --large -p lja_vs_flye lja_vs_flye.delta --large --layout --fat

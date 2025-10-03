@@ -15,4 +15,5 @@ hifiasm -o hifiASM_output/ERR11437317.asm \
     reads/Had-6b/ERR11437317.fastq.gz
 
 
-#awk '/^S/{print ">"$2;print $3}' FILE.gfa > FILE.fa
+#convertion to fasta format
+#awk '/^S/{print ">"$2;print $3}' ERR11437317.asm.bp.p_ctg.gfa > ERR11437317.asm.bp.p_ctg.fa

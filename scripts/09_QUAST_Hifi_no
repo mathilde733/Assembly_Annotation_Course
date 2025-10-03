@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#SBATCH --mail-type=none
+#SBATCH --job-name="QUAST"
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=16
+#SBATCH --time=1-00:00:00
+#SBATCH --mem=64G
+#SBATCH --partition=pibu_el8
+
+#HifiASM assembly without reference
+apptainer exec --bind /data:/data /containers/apptainer/quast_5.2.0.sif \
+    quast hifiASM_output/ERR11437317.asm.bp.p_ctg.fa --threads 4 \
+    -o hifi_no_reference_output \
+    --pacbio ./reads/Had-6b/ERR11437317.fastq.gz \
+    --eukaryote    \
+    --est-ref-size 135000000
